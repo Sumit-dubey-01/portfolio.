@@ -1,0 +1,665 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sumit Dubey | Digital Portfolio</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"
+    />
+
+    <style>
+      /* --- SYSTEM DESIGN TOKENS --- */
+      :root {
+        --bg: #f8fafc;
+        --surface: rgba(255, 255, 255, 0.7);
+        --text-main: #0f172a;
+        --text-muted: #64748b;
+        --primary: #0ea5e9;
+        --primary-glow: rgba(14, 165, 233, 0.15);
+        --border: #e2e8f0;
+        --radius-sm: 12px;
+        --radius-md: 20px;
+        --radius-lg: 30px;
+        --transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        --nav-height: 70px;
+      }
+
+      [data-theme="dark"] {
+        --bg: #020617;
+        --surface: rgba(15, 23, 42, 0.6);
+        --text-main: #f1f5f9;
+        --text-muted: #94a3b8;
+        --primary: #38bdf8;
+        --primary-glow: rgba(56, 189, 248, 0.2);
+        --border: #1e293b;
+      }
+
+      /* --- GLOBAL SETUP & SPOTLIGHT --- */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+      html {
+        scroll-padding-top: var(--nav-height);
+      }
+
+      body {
+        background-color: var(--bg);
+        color: var(--text-main);
+        line-height: 1.6;
+        overflow-x: hidden;
+        transition: background-color 0.5s ease;
+        position: relative;
+      }
+
+      /* Spotlight effect background */
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(
+          600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+          var(--primary-glow),
+          transparent 40%
+        );
+        z-index: -1;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 1s ease;
+      }
+      body.spotlight-active::before {
+        opacity: 1;
+      }
+
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+      }
+      section {
+        padding: 120px 0;
+      }
+
+      /* --- NAVIGATION --- */
+      nav {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+        background: var(--surface);
+        backdrop-filter: blur(15px);
+        border-bottom: 1px solid var(--border);
+      }
+      nav .container {
+        height: var(--nav-height);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .logo {
+        font-weight: 800;
+        font-size: 1.4rem;
+        color: var(--primary);
+        letter-spacing: -1px;
+        text-decoration: none;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+      }
+      .nav-links a {
+        text-decoration: none;
+        color: var(--text-muted);
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: var(--transition);
+        position: relative;
+        padding: 5px 0;
+      }
+      .nav-links a:hover,
+      .nav-links a.active {
+        color: var(--primary);
+      }
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--primary);
+        transition: width 0.3s ease;
+      }
+      .nav-links a.active::after {
+        width: 100%;
+      }
+
+      .theme-btn {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        width: 42px;
+        height: 42px;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        color: var(--text-main);
+        transition: var(--transition);
+      }
+      .theme-btn:hover {
+        border-color: var(--primary);
+        transform: translateY(-3px) rotate(15deg);
+      }
+
+      /* --- HERO --- */
+      #hero {
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+      .badge {
+        background: var(--primary-glow);
+        color: var(--primary);
+        padding: 8px 18px;
+        border-radius: 100px;
+        font-weight: 700;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 1.5rem;
+        display: inline-block;
+      }
+      h1 {
+        font-size: clamp(3.5rem, 9vw, 6rem);
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 1rem;
+        letter-spacing: -2px;
+      }
+      h1 span {
+        color: var(--primary);
+      }
+      .hero-sub {
+        color: var(--text-muted);
+        font-size: 1.2rem;
+        max-width: 650px;
+        margin: 0 auto 3rem;
+      }
+
+      /* --- BUTTONS --- */
+      .btn {
+        padding: 16px 36px;
+        border-radius: 14px;
+        text-decoration: none;
+        font-weight: 700;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+      }
+      .btn-primary {
+        background: var(--primary);
+        color: #fff;
+      }
+      .btn-primary::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          120deg,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
+        transition: 0.5s;
+        z-index: -1;
+      }
+      .btn-primary:hover::before {
+        left: 100%;
+      }
+      .btn-primary:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 15px 30px var(--primary-glow);
+      }
+
+      /* --- SKILLS BENTO GRID with 3D TILT --- */
+      .skills-header {
+        text-align: center;
+        margin-bottom: 5rem;
+      }
+      .skills-header h2 {
+        font-size: 3rem;
+        font-weight: 800;
+      }
+
+      .bento-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+        perspective: 1000px; /* Essential for 3D tilt */
+      }
+      .bento-item {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        backdrop-filter: blur(10px);
+        padding: 2rem;
+        border-radius: var(--radius-md);
+        transition:
+          transform 0.1s ease,
+          box-shadow 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        transform-style: preserve-3d;
+        will-change: transform;
+      }
+      .bento-item:hover {
+        border-color: var(--primary);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+      }
+      .bento-item i {
+        font-size: 3rem;
+        margin-bottom: 1.2rem;
+        transition: transform 0.3s ease;
+        transform: translateZ(20px);
+      }
+      .bento-item:hover i {
+        transform: translateZ(30px) scale(1.1);
+      }
+      .bento-item span {
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: var(--text-main);
+        transform: translateZ(15px);
+      }
+
+      .span-2 {
+        grid-column: span 2;
+      }
+
+      /* --- RESUME CARD --- */
+      .resume-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        backdrop-filter: blur(10px);
+        border-radius: var(--radius-lg);
+        padding: 5rem 2rem;
+        text-align: center;
+        transition: var(--transition);
+      }
+      .resume-card:hover {
+        border-color: var(--primary);
+        transform: translateY(-5px);
+      }
+
+      /* --- CONTACT --- */
+      #contact {
+        text-align: center;
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+      }
+      .contact-links {
+        display: flex;
+        justify-content: center;
+        gap: 3rem;
+        margin-top: 3rem;
+      }
+      .contact-item {
+        text-decoration: none;
+        color: var(--text-muted);
+        font-size: 2.5rem;
+        transition: var(--transition);
+      }
+      .contact-item:hover {
+        color: var(--primary);
+        transform: scale(1.2);
+      }
+
+      /* --- REVEAL ANIMATIONS --- */
+      .reveal {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: 1s cubic-bezier(0.23, 1, 0.32, 1);
+      }
+      .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      [data-theme="dark"] .reveal.active {
+        animation: glowPulse 2s ease-out;
+      }
+
+      @keyframes glowPulse {
+        0% {
+          box-shadow: 0 0 0 0 var(--primary-glow);
+        }
+        100% {
+          box-shadow: 0 0 30px 10px transparent;
+        }
+      }
+
+      /* --- RESPONSIVE --- */
+      @media (max-width: 768px) {
+        .nav-links {
+          display: none;
+        }
+        .bento-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        h1 {
+          font-size: 3.2rem;
+        }
+        section {
+          padding: 80px 0;
+        }
+      }
+      .logo_design{
+        width: 60px;
+        height: 70px;
+        border-radius: 50%;
+        object-fit: cover;
+        padding-top: 5px;
+      }
+    </style>
+  </head>
+  <body data-theme="light">
+    <nav>
+      <div class="container">
+        <a href="#hero" class="logo" ><img src="logo.jpg" alt="Logo" class="logo_design"></a>
+        <ul class="nav-links">
+          <li><a href="#hero" class="active">Home</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#resume">Resume</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+        <button class="theme-btn" id="theme-toggle" title="Switch Theme">
+          <i class="fas fa-moon"></i>
+        </button>
+      </div>
+    </nav>
+
+    <section id="hero">
+      <div class="container reveal">
+        <span class="badge">OPEN TO WORK</span>
+        <h1>
+           ASPIRING FULL STACK <span>DEVELOPER</span> <br />
+          <!-- Digital Craftsman -->
+        </h1>
+        <p class="hero-sub">
+          Hi, I'm Sumit Dubey. I specialize in building scalable, high-performance
+          web applications and integration technical solutions.
+        </p>
+        <a href="#resume" class="btn btn-primary"
+          >Download CV <i class="fas fa-arrow-down"></i
+        ></a>
+      </div>
+    </section>
+
+    <section id="skills" class="container">
+      <div class="skills-header reveal">
+        <h2>Technical Stack</h2>
+        <p
+          style="
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 500px;
+            margin: 1rem auto 0;
+          "
+        >
+          The tools and technologies I use to build seamless digital
+          experiences.
+        </p>
+      </div>
+
+      <div class="bento-grid">
+        <div class="bento-item span-2 reveal" data-tilt>
+          <i class="devicon-javascript-plain colored"></i
+          ><span>JavaScript (ES6+)</span>
+        </div>
+        <div class="bento-item span-2 reveal" data-tilt>
+          <i class="devicon-react-original colored"></i
+          ><span>React & Next.js</span>
+        </div>
+        <div class="bento-item reveal" data-tilt>
+          <i class="devicon-java-plain colored"></i><span>Java</span>
+        </div>
+        <div class="bento-item reveal" data-tilt>
+          <i class="devicon-python-plain colored"></i><span>Python</span>
+        </div>
+        <div class="bento-item reveal" data-tilt>
+          <i class="devicon-cplusplus-plain colored"></i><span>C++</span>
+        </div>
+        <div class="bento-item reveal" data-tilt>
+          <i class="devicon-mysql-plain colored"></i><span>MySQL</span>
+        </div>
+        <div class="bento-item span-2 reveal" data-tilt>
+          <i class="devicon-tailwindcss-plain colored"></i
+          ><span>Tailwind CSS</span>
+        </div>
+        <div class="bento-item reveal" data-tilt>
+          <i class="devicon-nodejs-plain colored"></i><span>Node.js</span>
+        </div>
+        <div class="bento-item reveal" data-tilt>
+          <i class="devicon-git-plain colored"></i><span>Git</span>
+        </div>
+        <div class="bento-item span-2 reveal" data-tilt>
+          <i class="fas fa-robot" style="color: #10b981"></i
+          ><span>Generative AI</span>
+        </div>
+        <div class="bento-item span-2 reveal" data-tilt>
+          <i class="fas fa-project-diagram" style="color: #f59e0b"></i
+          ><span>DSA Core CS</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="resume" class="container">
+      <div class="resume-card reveal">
+        <i
+          class="fas fa-file-contract"
+          style="
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            display: block;
+          "
+        ></i>
+        <h2 style="font-size: 2.8rem; font-weight: 800; margin-bottom: 1rem">
+          CV
+        </h2>
+        <p
+          style="
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            max-width: 550px;
+            margin-inline: auto;
+            font-size: 1.1rem;
+          "
+        >
+          A comprehensive document detailing my academic background, technical
+          skills, certifications, and professional experience.
+        </p>
+        <a
+          href="CV.pdf"
+          download="Sumit_Dubey_Resume"
+          class="btn btn-primary"
+        >
+          Download PDF <i class="fas fa-file-download"></i>
+        </a>
+      </div>
+    </section>
+
+    <section id="contact" class="container">
+      <div class="reveal">
+        <h2 style="font-size: 2.8rem; font-weight: 800">Let's Connect</h2>
+        <p
+          style="color: var(--text-muted); margin-top: 1rem; font-size: 1.1rem"
+        >
+          Interested in collaborating or have a question?
+        </p>
+        <div class="contact-links">
+          <a
+            href="mailto:your.sumitdevx@gmail.com"
+            class="contact-item"
+            title="Email Me"
+            ><i class="fas fa-envelope"></i
+          ></a>
+          <a href="https://www.linkedin.com/in/meetwithsumit/" target="_blank" class="contact-item" title="LinkedIn Profile"
+            ><i class="fab fa-linkedin"></i
+          ></a>
+          <a href="http://github.com/Sumit-dubey-01" target="_blank" class="contact-item" title="GitHub Profile"
+            ><i class="fab fa-github"></i
+          ></a>
+        </div>
+      </div>
+    </section>
+
+    <footer
+      style="
+        padding: 40px 0;
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        border-top: 1px solid var(--border);
+      "
+    >
+      <p>&copy; 2026 Sumit Dubey. Developed with precision.</p>
+    </footer>
+
+    <script>
+      // --- THEME MANAGEMENT (PERSISTENT) ---
+      const themeToggle = document.getElementById("theme-toggle");
+      const body = document.body;
+      const icon = themeToggle.querySelector("i");
+
+      const savedTheme = localStorage.getItem("portfolio-theme") || "light";
+      body.setAttribute("data-theme", savedTheme);
+      updateThemeUI(savedTheme);
+
+      themeToggle.addEventListener("click", () => {
+        const current = body.getAttribute("data-theme");
+        const target = current === "light" ? "dark" : "light";
+        body.setAttribute("data-theme", target);
+        localStorage.setItem("portfolio-theme", target);
+        updateThemeUI(target);
+      });
+
+      function updateThemeUI(theme) {
+        icon.className = theme === "light" ? "fas fa-moon" : "fas fa-sun";
+      }
+
+      // --- SPOTLIGHT & 3D TILT EFFECT ---
+      body.classList.add("spotlight-active"); // Activate on load
+
+      document.addEventListener("mousemove", (e) => {
+        // Background Spotlight
+        const { clientX, clientY } = e;
+        const xPos = (clientX / window.innerWidth) * 100;
+        const yPos = (clientY / window.innerHeight) * 100;
+        body.style.setProperty("--mouse-x", `${xPos}%`);
+        body.style.setProperty("--mouse-y", `${yPos}%`);
+
+        // Bento Tilt Effect
+        document.querySelectorAll("[data-tilt]").forEach((item) => {
+          const rect = item.getBoundingClientRect();
+          const itemX = e.clientX - rect.left;
+          const itemY = e.clientY - rect.top;
+
+          const xPct = itemX / rect.width - 0.5; // -0.5 to 0.5
+          const yPct = itemY / rect.height - 0.5;
+
+          // Intensity of tilt (higher numbers = more tilt)
+          const intensity = 15;
+          item.style.transform = `rotateX(${-yPct * intensity}deg) rotateY(${xPct * intensity}deg)`;
+        });
+      });
+
+      // Reset Tilt on Mouse Leave
+      document.querySelectorAll("[data-tilt]").forEach((item) => {
+        item.addEventListener("mouseleave", () => {
+          item.style.transform = "rotateX(0deg) rotateY(0deg)";
+        });
+      });
+
+      // --- SCROLL REVEAL ---
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("active");
+            }
+          });
+        },
+        { threshold: 0.15 },
+      );
+      document
+        .querySelectorAll(".reveal")
+        .forEach((el) => revealObserver.observe(el));
+
+      // --- ACTIVE NAV ON SCROLL & SMOOTH SCROLL ---
+      const sections = document.querySelectorAll("section");
+      const navLinks = document.querySelectorAll(".nav-links a");
+
+      window.addEventListener("scroll", () => {
+        let current = "";
+        sections.forEach((section) => {
+          const sectionTop = section.offsetTop;
+          const sectionHeight = section.clientHeight;
+          if (window.scrollY >= sectionTop - varProp("--nav-height") - 50) {
+            current = section.getAttribute("id");
+          }
+        });
+
+        navLinks.forEach((link) => {
+          link.classList.remove("active");
+          if (link.getAttribute("href").includes(current)) {
+            link.classList.add("active");
+          }
+        });
+      });
+
+      // Helper to get CSS variables in JS
+      function varProp(name) {
+        return parseInt(
+          getComputedStyle(document.documentElement).getPropertyValue(name),
+        );
+      }
+
+      // Smooth Scroll link handling
+      navLinks.forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          document
+            .querySelector(this.getAttribute("href"))
+            .scrollIntoView({ behavior: "smooth" });
+        });
+      });
+    </script>
+  </body>
+</html>
