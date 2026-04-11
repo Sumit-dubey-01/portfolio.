@@ -404,6 +404,14 @@
       </div>
     </nav>
 
+    <audio id="bg-music" loop>
+    <source src="bg-music.mp3" type="audio/mpeg">
+</audio>
+
+<div id="music-control" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; cursor: pointer; background: var(--surface); padding: 10px; border-radius: 50%; border: 1px solid var(--border); width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;">
+    <i id="music-icon" class="fas fa-volume-mute" style="color: var(--primary);"></i>
+</div>
+
     <section id="hero">
       <div class="container reveal">
         <span class="badge">OPEN TO WORK</span>
@@ -660,6 +668,42 @@
             .querySelector(this.getAttribute("href"))
             .scrollIntoView({ behavior: "smooth" });
         });
+
+//audio control
+const music = document.getElementById('bg-music');
+const musicBtn = document.getElementById('music-control');
+const musicIcon = document.getElementById('music-icon');
+let isPlaying = false;
+
+// 1. Play music on the very first click anywhere on the page
+document.addEventListener('click', () => {
+    if (!isPlaying) {
+        playMusic();
+    }
+}, { once: true }); // 'once: true' ensures this only triggers on the first click
+
+function playMusic() {
+    music.play().then(() => {
+        isPlaying = true;
+        musicIcon.className = 'fas fa-volume-up';
+    }).catch(error => {
+        console.log("Autoplay prevented. Waiting for interaction.");
+    });
+}
+
+// 2. Manual Toggle Button Logic
+musicBtn.addEventListener('click', (e) => {
+    e.stopPropagation(); // Prevents the document-level click from firing
+    if (isPlaying) {
+        music.pause();
+        musicIcon.className = 'fas fa-volume-mute';
+    } else {
+        music.play();
+        musicIcon.className = 'fas fa-volume-up';
+    }
+    isPlaying = !isPlaying;
+});
+
       });
     </script>
   </body>
