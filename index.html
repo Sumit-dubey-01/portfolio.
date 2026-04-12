@@ -379,7 +379,7 @@
           padding: 80px 0;
         }
       }
-      .logo_design{
+      .logo_design {
         width: 60px;
         height: 70px;
         border-radius: 50%;
@@ -391,7 +391,9 @@
   <body data-theme="light">
     <nav>
       <div class="container">
-        <a href="#hero" class="logo" ><img src="logo.jpg" alt="Logo" class="logo_design"></a>
+        <a href="#hero" class="logo"
+          ><img src="logo.jpg" alt="Logo" class="logo_design"
+        /></a>
         <ul class="nav-links">
           <li><a href="#hero" class="active">Home</a></li>
           <li><a href="#skills">Skills</a></li>
@@ -403,25 +405,145 @@
         </button>
       </div>
     </nav>
-
-    <audio id="bg-music" loop>
-    <source src="bg-music.mp3" type="audio/mpeg">
-</audio>
-
-<div id="music-control" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; cursor: pointer; background: var(--surface); padding: 10px; border-radius: 50%; border: 1px solid var(--border); width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;">
-    <i id="music-icon" class="fas fa-volume-mute" style="color: var(--primary);"></i>
+<div class="music-ticker">
+    <div class="ticker-content">
+        <span><i class="fas fa-compact-disc"></i> Refresh the page to load a new track from the playlist!</span>
+        <span><i class="fas fa-compact-disc"></i> Refresh the page to load a new track from the playlist!</span>
+        <span><i class="fas fa-compact-disc"></i> Refresh the page to load a new track from the playlist!</span>
+    </div>
 </div>
+
+<style>
+    .music-ticker {
+        width: 100%;
+        overflow: hidden;
+        background: var(--primary);
+        color: white;
+        padding: 8px 0;
+        font-size: 0.75rem;
+        font-weight: 800;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        position: relative;
+        z-index: 1001;
+    }
+    .ticker-content {
+        display: flex;
+        white-space: nowrap;
+        animation: ticker-move 20s linear infinite;
+    }
+    .ticker-content span {
+        padding: 0 40px;
+    }
+    .ticker-content i {
+        margin-right: 10px;
+        animation: spin 3s linear infinite;
+    }
+    @keyframes ticker-move {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+    }
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    /* Adjust nav position so it doesn't overlap the ticker */
+    nav { top: 35px !important; } 
+    @media (max-width: 768px) { nav { top: 32px !important; } }
+</style>
+
+<audio id="bg-music" loop></audio>
+
+<script>
+    const music = document.getElementById("bg-music");
+    const musicBtn = document.getElementById("music-control");
+    const musicIcon = document.getElementById("music-icon");
+
+    // Array of your songs - Ensure these files are in your folder!
+    const songs = [
+        "song1.mp3",
+        "song2.mp3",
+        "song3.mp3",
+        "song4.mp3",
+        "song5.mp3"
+    ];
+
+    // Pick random song immediately
+    music.src = songs[Math.floor(Math.random() * songs.length)];
+    
+    let isPlaying = false;
+
+    async function handlePlay() {
+        try {
+            await music.play();
+            isPlaying = true;
+            musicIcon.className = "fas fa-volume-up";
+        } catch (err) {
+            console.log("Autoplay blocked. Music will start on next click.");
+        }
+    }
+
+    // Try to play on load
+    window.addEventListener("load", handlePlay);
+
+    // FORCE START: Play on the absolute first click, scroll, or touch
+    ["click", "wheel", "touchstart", "keydown"].forEach(event => {
+        document.addEventListener(event, () => {
+            if (!isPlaying) handlePlay();
+        }, { once: true });
+    });
+
+    // Manual Toggle
+    musicBtn.addEventListener("click", (e) => {
+        e.stopPropagation(); // Prevents the global click listener from re-triggering
+        if (isPlaying) {
+            music.pause();
+            musicIcon.className = "fas fa-volume-mute";
+        } else {
+            music.play();
+            musicIcon.className = "fas fa-volume-up";
+        }
+        isPlaying = !isPlaying;
+    });
+</script>
+    <audio id="bg-music" autoplay loop></audio>
+
+    <div
+      id="music-control"
+      style="
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1000;
+        cursor: pointer;
+        background: var(--surface);
+        padding: 10px;
+        border-radius: 50%;
+        border: 1px solid var(--border);
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      "
+    >
+      <i
+        id="music-icon"
+        class="fas fa-volume-mute"
+        style="color: var(--primary)"
+      ></i>
+    </div>
 
     <section id="hero">
       <div class="container reveal">
         <span class="badge">OPEN TO WORK</span>
         <h1>
-           ASPIRING FULL STACK <span>DEVELOPER</span> <br />
+          ASPIRING FULL STACK <span>DEVELOPER</span> <br />
           <!-- Digital Craftsman -->
         </h1>
         <p class="hero-sub">
-          Hi, I'm Sumit Dubey. I specialize in building scalable, high-performance
-          web applications and integration technical solutions.
+          Hi, I'm Sumit Dubey. I specialize in building scalable,
+          high-performance web applications and integration technical solutions.
         </p>
         <a href="#resume" class="btn btn-primary"
           >Download CV <i class="fas fa-arrow-down"></i
@@ -513,14 +635,14 @@
           A comprehensive document detailing my academic background, technical
           skills, certifications, and professional experience.
         </p>
-        <a 
-  href="CV.pdf" 
-  target="_blank" 
-  rel="noopener noreferrer" 
-  class="btn btn-primary"
->
-  View Resume <i class="fas fa-external-link-alt"></i>
-</a>
+        <a
+          href="CV.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn-primary"
+        >
+          View Resume <i class="fas fa-external-link-alt"></i>
+        </a>
       </div>
     </section>
 
@@ -539,10 +661,18 @@
             title="Email Me"
             ><i class="fas fa-envelope"></i
           ></a>
-          <a href="https://www.linkedin.com/in/meetwithsumit/" target="_blank" class="contact-item" title="LinkedIn Profile"
+          <a
+            href="https://www.linkedin.com/in/meetwithsumit/"
+            target="_blank"
+            class="contact-item"
+            title="LinkedIn Profile"
             ><i class="fab fa-linkedin"></i
           ></a>
-          <a href="http://github.com/Sumit-dubey-01" target="_blank" class="contact-item" title="GitHub Profile"
+          <a
+            href="http://github.com/Sumit-dubey-01"
+            target="_blank"
+            class="contact-item"
+            title="GitHub Profile"
             ><i class="fab fa-github"></i
           ></a>
         </div>
@@ -669,41 +799,62 @@
             .scrollIntoView({ behavior: "smooth" });
         });
 
-//audio control
-const music = document.getElementById('bg-music');
-const musicBtn = document.getElementById('music-control');
-const musicIcon = document.getElementById('music-icon');
+        //audio control
+     // --- IMPROVED AUTO-PLAY LOGIC ---
+const music = document.getElementById("bg-music");
+const musicBtn = document.getElementById("music-control");
+const musicIcon = document.getElementById("music-icon");
+
+const songs = [
+  "song1.mp3",
+  "song2.mp3",
+  "song3.mp3",
+  "song4.mp3",
+];
+
+// 1. Pick random song
+const randomTrack = songs[Math.floor(Math.random() * songs.length)];
+music.src = randomTrack;
+
 let isPlaying = false;
 
-// 1. Play music on the very first click anywhere on the page
-document.addEventListener('click', () => {
-    if (!isPlaying) {
-        playMusic();
-    }
-}, { once: true }); // 'once: true' ensures this only triggers on the first click
-
-function playMusic() {
-    music.play().then(() => {
-        isPlaying = true;
-        musicIcon.className = 'fas fa-volume-up';
-    }).catch(error => {
-        console.log("Autoplay prevented. Waiting for interaction.");
-    });
+// 2. Function to handle the Play logic
+async function playMusic() {
+  try {
+    await music.play();
+    isPlaying = true;
+    musicIcon.className = "fas fa-volume-up";
+  } catch (err) {
+    console.log("Autoplay blocked by browser. Awaiting user interaction.");
+  }
 }
 
-// 2. Manual Toggle Button Logic
-musicBtn.addEventListener('click', (e) => {
-    e.stopPropagation(); // Prevents the document-level click from firing
-    if (isPlaying) {
-        music.pause();
-        musicIcon.className = 'fas fa-volume-mute';
-    } else {
-        music.play();
-        musicIcon.className = 'fas fa-volume-up';
+// 3. Try playing on Load (Works if the browser allows it)
+window.addEventListener("load", playMusic);
+
+// 4. THE FIX: Trigger play on the absolute first interaction
+// This ensures that even if autoplay is blocked, 
+// the music starts as soon as they scroll or click anything.
+["click", "touchstart", "keydown", "wheel"].forEach(event => {
+  document.addEventListener(event, () => {
+    if (!isPlaying) {
+      playMusic();
     }
-    isPlaying = !isPlaying;
+  }, { once: true }); // Only runs once to start the music
 });
 
+// 5. Manual Toggle (Pause whenever you want)
+musicBtn.addEventListener("click", (e) => {
+  e.stopPropagation(); // Stop the global click event from firing again
+  if (isPlaying) {
+    music.pause();
+    musicIcon.className = "fas fa-volume-mute";
+  } else {
+    music.play();
+    musicIcon.className = "fas fa-volume-up";
+  }
+  isPlaying = !isPlaying;
+});
       });
     </script>
   </body>
